@@ -18,7 +18,7 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
     PontoTuristico(id: 1, nome: 'Igreja', descricao: 'Igreja Matriz', diferenciais: 'Centro', data: DateTime.now())
   ];
 
-  int _ultimo = 0;
+  int _ultimoId = 0;
 
   @override
   Widget build(BuildContext context){
@@ -26,7 +26,7 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
         appBar: _criarAppBar(),
         body: _criarBody(),
         floatingActionButton: FloatingActionButton(
-          onPressed: (){},//_abrirCadastro,
+          onPressed: _abrirCadastro,
           tooltip: 'Novo Ponto Turistico',
           child: Icon(Icons.add),
         ),
@@ -103,5 +103,36 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
           )
       )
     ];
+  }
+
+  void _abrirCadastro({PontoTuristico? pontoTuristicoAtual, int? index}){
+    final key = GlobalKey<ConteudoFormDialogState>();
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text(pontoTuristicoAtual == null ? 'Novo ponto turistico' : 'Alterar ponto turistico ${pontoTuristicoAtual.id}'),
+            content: ConteudoFormDialog(key: key, pontoTuristicoAtual: pontoTuristicoAtual,),
+            actions: [
+              TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancelar')),
+              TextButton(onPressed: () {
+                if(key.currentState != null && key.currentState!.dadosValidados()){
+                  setState(() {
+                    final novoPontoturistico = key.currentState!.novoPontoTuristico;
+                    if(index == null){
+                      novoPontoturistico.id = ++ _ultimoId;
+                    }
+                    else{
+                      pontosTuristicos[index] = novoPontoturistico;
+                    }
+                    pontosTuristicos.add(novoPontoTuristico);
+                  });
+                  Navigator.of(context).pop();
+                }
+              }, child: Text('Salvar'),
+              )
+            ],
+          );
+        });
   }
 }
