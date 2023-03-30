@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../model/ponto_turistico.dart';
+import '../widget/conteudo_form_dialog.dart';
 
 
 class ListaPontoTuristicoPage extends StatefulWidget{
@@ -58,11 +59,11 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
                 subtitle: Text('${pontoTuristico.descricao} - ${pontoTuristico.diferenciais} - Data - ${pontoTuristico.data} -'),),
                 itemBuilder: (BuildContext context) => criarItensMenuPopup(),
                 onSelected: (String valorSelecionado){
-                  /*if(valorSelecionado == ACAO_EDITAR){
-                    _abrirForm(pontoAtual: pontoTuristico, index: index);
+                  if(valorSelecionado == ACAO_EDITAR){
+                    _abrirCadastro(pontoTuristicoAtual: pontoTuristico, index: index);
                   } else{
                     _excluir(index);
-                  }*/
+                  }
                 },
             );
           },
@@ -116,7 +117,7 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
             actions: [
               TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancelar')),
               TextButton(onPressed: () {
-                if(key.currentState != null && key.currentState!.dadosValidados()){
+                if(key.currentState != null && key.currentState!.dadosValidos()){
                   setState(() {
                     final novoPontoturistico = key.currentState!.novoPontoTuristico;
                     if(index == null){
@@ -125,7 +126,7 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
                     else{
                       pontosTuristicos[index] = novoPontoturistico;
                     }
-                    pontosTuristicos.add(novoPontoTuristico);
+                    pontosTuristicos.add(novoPontoturistico);
                   });
                   Navigator.of(context).pop();
                 }
@@ -134,5 +135,40 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
             ],
           );
         });
+  }
+
+  void _excluir(int index){
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Row(
+              children: [
+                Icon(Icons.warning, color: Colors.red,),
+                Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text('ATENÇÃO'),
+                ),
+              ],
+            ),
+            content: Text('Esse registro será deletado definitivamente'),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Cancelar')
+              ),
+              TextButton(
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                    setState(() {
+                      pontosTuristicos.removeAt(index);
+                    });
+                  },
+                  child: Text('OK')
+              ),
+            ],
+          );
+        }
+    );
   }
 }

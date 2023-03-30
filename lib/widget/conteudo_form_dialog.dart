@@ -9,6 +9,8 @@ class ConteudoFormDialog extends StatefulWidget{
 
   final PontoTuristico? pontoTuristicoAtual;
 
+  ConteudoFormDialog({Key ? key, this.pontoTuristicoAtual}) : super(key: key);
+
   @override
   ConteudoFormDialogState createState() => ConteudoFormDialogState();
 }
@@ -26,7 +28,9 @@ class ConteudoFormDialogState extends State<ConteudoFormDialog> {
   void initState(){
     super.initState();
     if(widget.pontoTuristicoAtual != null){
+      nomeController.text = widget.pontoTuristicoAtual!.nome;
       descricaoController.text = widget.pontoTuristicoAtual!.descricao;
+      diferenciaisController.text = widget.pontoTuristicoAtual!.diferenciais;
       dataController.text = widget.pontoTuristicoAtual!.dataFormatada;
     }
   }
@@ -36,59 +40,53 @@ class ConteudoFormDialogState extends State<ConteudoFormDialog> {
       key: formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [TextFormField(
-          controller: descricaoController,
-          decoration: InputDecoration(labelText: 'Descrição'),
-          validator: (String? valor){
-            if(valor == null || valor.isEmpty){
-              return 'Informe a descrição';
-            }
-            return null;
-          },
-        ),
+        children: [
           TextFormField(
-            controller: prazoController,
-            decoration: InputDecoration(labelText: 'Prazo', prefix: IconButton(
-              onPressed: _mostraCalendario,
-              icon: Icon(Icons.calendar_today),
-            ),
-                suffixIcon: IconButton(
-                  onPressed: () => prazoController.clear(),
-                  icon: Icon(Icons.close),
-                )
-            ),
-            readOnly: true,
-          )
+            controller: nomeController,
+            decoration: InputDecoration(labelText: 'Nome'),
+            validator: (String? valor){
+              if(valor == null || valor.isEmpty){
+                return 'Informe o nome';
+              }
+              return null;
+            },
+          ),
+          TextFormField(
+            controller: descricaoController,
+            decoration: InputDecoration(labelText: 'Descrição'),
+            validator: (String? valor){
+              if(valor == null || valor.isEmpty){
+                return 'Informe a descrição';
+              }
+              return null;
+            },
+          ),
+          TextFormField(
+            controller: diferenciaisController,
+            decoration: InputDecoration(labelText: 'Diferenciais'),
+            validator: (String? valor){
+              if(valor == null || valor.isEmpty){
+                return 'Informe os diferenciais';
+              }
+              return null;
+            },
+          ),
+          TextFormField(
+            controller: dataController,
+            decoration: InputDecoration(labelText: 'Data'),
+          ),
         ],
       ),
     );
   }
 
-  void _mostraCalendario(){
-    final dataFormatada = prazoController.text;
-    var data = DateTime.now();
-    if (dataFormatada.isNotEmpty){
-      data = _dateFormat.parse(dataFormatada);
-    }
-    showDatePicker(
-      context: context,
-      initialDate: data,
-      firstDate: data.subtract(Duration(days: 365 * 5)),
-      lastDate: data.add(Duration(days: 365 * 5)),
-    ).then((DateTime? dataSelecionada){
-      if(dataSelecionada != null){
-        setState(() {
-          prazoController.text = _dateFormat.format(dataSelecionada);
-        });
-      }
-    });
-  }
+  bool dadosValidos() => formKey.currentState!.validate() == true;
 
-  bool dadosValidados() => formKey.currentState!.validate() == true;
-
-  Tarefa get novaTarefa => Tarefa(
-    id: widget.tarefaAtual?.id ?? 0,
-    descricao: descricaoController.text,
-    prazo: prazoController.text.isEmpty ? null : _dateFormat.parse(prazoController.text),
+  PontoTuristico get novoPontoTuristico => PontoTuristico(
+      id: widget.pontoTuristicoAtual?.id ?? 0,
+      nome: nomeController.text,
+      descricao: descricaoController.text,
+      diferenciais: diferenciaisController.text,
+      data: dataController.text.isEmpty ? null : _dateFormat.parse(dataController.text),
   );
 }
