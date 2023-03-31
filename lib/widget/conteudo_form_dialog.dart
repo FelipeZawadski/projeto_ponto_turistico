@@ -21,8 +21,8 @@ class ConteudoFormDialogState extends State<ConteudoFormDialog> {
   final nomeController = TextEditingController();
   final descricaoController = TextEditingController();
   final diferenciaisController = TextEditingController();
-  final dataController = TextEditingController();
   final _dateFormat = DateFormat('dd/MM/yyyy');
+  final dataController = TextEditingController();
 
   @override
   void initState(){
@@ -75,21 +75,21 @@ class ConteudoFormDialogState extends State<ConteudoFormDialog> {
             TextFormField(
               controller: dataController,
               decoration: InputDecoration(labelText: 'Data'),
-              onChanged: _criarData,
+              validator: (String? valor){
+                if(valor == null || valor.isEmpty){
+                  final dataFormatada = dataController.text;
+                  var data = DateTime.now();
+                  if (dataFormatada.isNotEmpty){
+                    data = _dateFormat.parse(dataFormatada);
+                  }
+                  return dataController.text = _dateFormat.format(data);
+                }
+              },
             )
           ],
         ),
       ),
     );
-  }
-
-  void _criarData(String? valor){
-    final dataFormatada = dataController.text;
-    var data = DateTime.now();
-    if (dataFormatada.isNotEmpty){
-      data = _dateFormat.parse(dataFormatada);
-    }
-    dataController.text = _dateFormat.format(data);
   }
 
   bool dadosValidos() => formKey.currentState!.validate() == true;

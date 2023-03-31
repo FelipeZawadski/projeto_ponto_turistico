@@ -14,13 +14,13 @@ class PontoTuristico{
   String nome;
   String descricao;
   String diferenciais;
-  DateTime? data;
+  DateTime data;
 
   PontoTuristico({required this.id, required this.nome ,required this.descricao, required this.diferenciais, required this.data});
 
   String get dataFormatada{
     if(data == null){
-      return "";
+      return  "";
     }
     return DateFormat('dd/MM/yyyy').format(data!);
   }
