@@ -82,14 +82,6 @@ class _FiltroPageState extends State<FiltroPage>{
             onChanged: _onFiltroNomeChange,
           ),
         ),
-        Divider(),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: TextField(decoration: InputDecoration(labelText: 'Diferenciais começa com: '),
-            controller: dataController,
-            onChanged: _onFiltroDataChange,
-          ),
-        ),
       ],
     );
   }
@@ -129,8 +121,5 @@ class _FiltroPageState extends State<FiltroPage>{
   void _onFiltroNomeChange(String? valor){
     pref.setString(FiltroPage.CAMPO_NOME, valor ?? '');
     _alteracaoValores = true;
-  }
-
-  void _onFiltroDataChange(String? valor){
   }
 }
