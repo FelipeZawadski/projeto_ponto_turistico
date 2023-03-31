@@ -81,7 +81,7 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
     final navigator = Navigator.of(context);
     navigator.pushNamed(FiltroPage.ROUTE_NAME).then((alteracaoValores) {
       if(alteracaoValores == true){
-        //////
+        ///////
       }
     });
   }
