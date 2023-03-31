@@ -9,7 +9,8 @@ class FiltroPage extends StatefulWidget{
   static const ROUTE_NAME = '/filtro';
   static const CAMPO_ORDENACAO = 'campoOrdenacao';
   static const CAMPO_ORDEM_DECRECENTE = 'campoOrdemDescrecente';
-  static const CAMPO_DESCRICAO = 'campoDescricao';
+  static const CAMPO_NOME = 'campoNome';
+  static const CAMPO_DATA = 'campoData';
 
   @override
   _FiltroPageState createState() => _FiltroPageState();
@@ -18,14 +19,12 @@ class FiltroPage extends StatefulWidget{
 class _FiltroPageState extends State<FiltroPage>{
 
   final _campoParaOrdenacao = {
-    PontoTuristico.CAMPO_ID : 'Código', PontoTuristico.CAMPO_DESCRICAO : 'Descrição', PontoTuristico.DATA : 'Data',
-    PontoTuristico.CAMPO_NOME : 'Nome', PontoTuristico.CAMPO_DIFERENCIAIS : 'Diferenciais',
+    PontoTuristico.CAMPO_ID : 'Código', PontoTuristico.DATA : 'Data', PontoTuristico.CAMPO_NOME : 'Nome',
   };
 
   late final SharedPreferences pref;
-  final descricaoController = TextEditingController();
   final nomeController = TextEditingController();
-  final diferenciais = TextEditingController();
+  final dataController = TextEditingController();
   String campoOrdenacao = PontoTuristico.CAMPO_ID;
   bool ordenacaoDecrescente = false;
   bool _alteracaoValores = false;
@@ -45,5 +44,93 @@ class _FiltroPageState extends State<FiltroPage>{
         ),
         onWillPop: _onClickVoltar,
     );
+  }
+
+  Widget _criarBody(){
+    return ListView(
+      children: [
+        Padding(
+            padding: EdgeInsets.only(left: 10, top: 10),
+            child: Text('Campo para Ordenação'),
+        ),
+        for(final campo in _campoParaOrdenacao.keys)
+          Row(
+            children: [
+              Radio(
+                value: campo,
+                groupValue: campoOrdenacao,
+                onChanged: _onCampoOrdenacaoChange,
+              ),
+              Text(_campoParaOrdenacao[campo] ?? ''),
+            ],
+          ),
+        Divider(),
+        Row(
+          children: [
+            Checkbox(
+              value: ordenacaoDecrescente,
+              onChanged: _onUsarOrdemDecrescenteChange,
+            ),
+            Text('Usar ordem decrescente'),
+          ],
+        ),
+        Divider(),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: TextField(decoration: InputDecoration(labelText: 'Nome começa com: '),
+            controller: nomeController,
+            onChanged: _onFiltroNomeChange,
+          ),
+        ),
+        Divider(),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: TextField(decoration: InputDecoration(labelText: 'Diferenciais começa com: '),
+            controller: dataController,
+            onChanged: _onFiltroDataChange,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<bool> _onClickVoltar() async {
+    Navigator.of(context).pop(_alteracaoValores);
+    return true;
+  }
+
+  void _carregarSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    pref = prefs;
+    setState(() {
+      campoOrdenacao = pref.getString(FiltroPage.CAMPO_ORDENACAO) ?? PontoTuristico.CAMPO_ID;
+      ordenacaoDecrescente = pref.getBool(FiltroPage.CAMPO_ORDEM_DECRECENTE) ?? false;
+      nomeController.text = pref.getString(FiltroPage.CAMPO_NOME) ?? '';
+      dataController.text = pref.getString(FiltroPage.CAMPO_DATA) ?? '';
+    });
+  }
+
+  void _onCampoOrdenacaoChange(String? valor){
+    pref.setString(FiltroPage.CAMPO_ORDENACAO, valor ?? '');
+    _alteracaoValores = true;
+    setState(() {
+      campoOrdenacao = valor ?? '';
+    });
+  }
+
+  void _onUsarOrdemDecrescenteChange(bool? valor){
+    pref.setBool(FiltroPage.CAMPO_ORDEM_DECRECENTE, valor == true);
+    _alteracaoValores = true;
+    setState(() {
+      ordenacaoDecrescente = valor == true;
+    });
+  }
+
+  void _onFiltroNomeChange(String? valor){
+    pref.setString(FiltroPage.CAMPO_NOME, valor ?? '');
+    _alteracaoValores = true;
+  }
+
+  void _onFiltroDataChange(String? valor){
   }
 }

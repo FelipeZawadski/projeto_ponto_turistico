@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../model/ponto_turistico.dart';
 import '../widget/conteudo_form_dialog.dart';
+import 'filtro_page.dart';
 
 
 class ListaPontoTuristicoPage extends StatefulWidget{
@@ -14,6 +15,7 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
 
   static const ACAO_EDITAR = 'editar';
   static const ACAO_EXCLUIR = 'excluir';
+  static const ACAO_VISUALIZAR = 'visualizar';
 
   final pontosTuristicos = <PontoTuristico>[
     PontoTuristico(id: 1, nome: 'Igreja', descricao: 'Igreja Matriz', diferenciais: 'Centro', data: DateTime.now())
@@ -38,7 +40,7 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
     return AppBar(
       title: Text('Pontos Turisticos'),
       actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.filter_list)), // _paginaFiltro
+        IconButton(onPressed: _paginaFiltro, icon: Icon(Icons.filter_list)), // _paginaFiltro
       ],
     );
   }
@@ -56,12 +58,15 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
             final pontoTuristico = pontosTuristicos[index];
             return PopupMenuButton<String>(
                 child: ListTile(title: Text('${pontoTuristico.id} - ${pontoTuristico.nome}'),
-                subtitle: Text('${pontoTuristico.descricao} - ${pontoTuristico.diferenciais} - Data - ${pontoTuristico.data} -'),),
+                subtitle: Text('${pontoTuristico.descricao} - ${pontoTuristico.diferenciais} - Data - ${pontoTuristico.dataFormatada}'),),
                 itemBuilder: (BuildContext context) => criarItensMenuPopup(),
                 onSelected: (String valorSelecionado){
                   if(valorSelecionado == ACAO_EDITAR){
                     _abrirCadastro(pontoTuristicoAtual: pontoTuristico, index: index);
-                  } else{
+                  } else if(valorSelecionado == ACAO_VISUALIZAR){
+                    _abrirVisualizacao(pontoTuristicoAtual: pontoTuristico, index: index);
+                  }
+                  else{
                     _excluir(index);
                   }
                 },
@@ -72,14 +77,14 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
     }
   }
 
-  /*void _paginaFiltro(){
+  void _paginaFiltro(){
     final navigator = Navigator.of(context);
-    navigator.pushNamed(FiltroPage.ROUTE_NAME).then((alterouValores) {
-      if(alterouValores == true){
+    navigator.pushNamed(FiltroPage.ROUTE_NAME).then((alteracaoValores) {
+      if(alteracaoValores == true){
         //////
       }
     });
-  }*/
+  }
 
   List<PopupMenuEntry<String>> criarItensMenuPopup(){
     return [
@@ -102,7 +107,17 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
                     child: Text('Excluir')),
               ]
           )
-      )
+      ),
+      PopupMenuItem<String>(
+          value: ACAO_VISUALIZAR,
+          child: Row(
+              children: [
+                Icon (Icons.visibility, color: Colors.black),
+                Padding(padding: EdgeInsets.only(left: 10),
+                    child: Text('Visualizar')),
+              ]
+          )
+      ),
     ];
   }
 
@@ -135,6 +150,22 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
             ],
           );
         });
+  }
+
+  void _abrirVisualizacao({PontoTuristico? pontoTuristicoAtual, int? index}){
+    final key = GlobalKey<ConteudoFormDialogState>();
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text('Visualizar ponto Turistico ${pontoTuristicoAtual?.id}'),
+            content: ConteudoFormDialog(key: key, pontoTuristicoAtual : pontoTuristicoAtual,),
+            actions: [
+              TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('OK')),
+            ],
+          );
+        }
+    );
   }
 
   void _excluir(int index){
