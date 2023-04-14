@@ -190,38 +190,41 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
       });
   }
 
-  void _abrirCadastro({PontoTuristico? pontoTuristicoAtual}){
+  void _abrirCadastro({PontoTuristico? pontoTuristico}){
     final key = GlobalKey<ConteudoFormDialogState>();
     showDialog(
         context: context,
         builder: (BuildContext context){
           return AlertDialog(
-            title: Text(pontoTuristicoAtual == null ? 'Novo ponto turistico' : 'Alterar ponto turistico ${pontoTuristicoAtual.id}'),
-            content: ConteudoFormDialog(key: key, pontoTuristicoAtual: pontoTuristicoAtual,),
+            title: Text(pontoTuristico == null ? 'Novo ponto turistico' : 'Alterar ponto turistico ${pontoTuristico.id}'),
+            content: ConteudoFormDialog(key: key, pontoTuristico: pontoTuristico,),
             actions: [
-              TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancelar')),
-              TextButton(onPressed: () {
-                if(key.currentState != null && key.currentState!.dadosValidos()){
-                  setState(() {
-                    final novoPontoturistico = key.currentState!.novoPontoTuristico;
-                    if(index == null){
-                      novoPontoturistico.id = ++ _ultimoId;
-                    }
-                    else{
-                      pontosTuristicos[index] = novoPontoturistico;
-                    }
-                    pontosTuristicos.add(novoPontoturistico);
-                  });
+              TextButton(
+                child: Text('Cancelar'),
+                onPressed: () => Navigator.pop(context),
+              ),
+              TextButton(
+                child: Text('Salvar'),
+                onPressed: () {
+                  if (key.currentState?.dadosValidos() != true) {
+                    return;
+                  }
                   Navigator.of(context).pop();
-                }
-              }, child: Text('Salvar'),
-              )
+                  final novoPontoTuristico = key.currentState!.novoPontoTuristico;
+                  _dao.salvar(novoPontoTuristico).then((success) {
+                  if (success) {
+                    _atualizarLista();
+                  }
+                  });
+                _atualizarLista();
+              },
+              ),
             ],
           );
         });
   }
 
-  void _abrirVisualizacao({PontoTuristico? pontoTuristicoAtual, int? index}){
+  /*void _abrirVisualizacao({PontoTuristico? pontoTuristicoAtual, int? index}){
     final key = GlobalKey<ConteudoFormDialogState>();
     showDialog(
         context: context,
@@ -235,9 +238,9 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
           );
         }
     );
-  }
+  }*/
 
-  void _excluir(int index){
+  void _excluir(PontoTuristico pontoTuristico){
     showDialog(
         context: context,
         builder: (BuildContext context){
@@ -258,14 +261,18 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
                   child: Text('Cancelar')
               ),
               TextButton(
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.of(context).pop();
-                    setState(() {
-                      pontosTuristicos.removeAt(index);
+                    if(pontoTuristico.id == null){
+                      return;
+                    }
+                    _dao.remover(pontoTuristico.id!).then((sucess) {
+                      if (sucess)
+                        _atualizarLista();
                     });
                   },
                   child: Text('OK')
-              ),
+              )
             ],
           );
         }

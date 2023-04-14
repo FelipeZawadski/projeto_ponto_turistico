@@ -6,9 +6,11 @@ import 'package:projeto_ponto_turistico/model/ponto_turistico.dart';
 
 class ConteudoFormDialog extends StatefulWidget{
 
-  final PontoTuristico? pontoTuristicoAtual;
+  final PontoTuristico? pontoTuristico;
 
-  ConteudoFormDialog({Key ? key, this.pontoTuristicoAtual}) : super(key: key);
+  ConteudoFormDialog({Key ? key, this.pontoTuristico}) : super(key: key);
+
+  void init() {}
 
   @override
   ConteudoFormDialogState createState() => ConteudoFormDialogState();
@@ -26,11 +28,11 @@ class ConteudoFormDialogState extends State<ConteudoFormDialog> {
   @override
   void initState(){
     super.initState();
-    if(widget.pontoTuristicoAtual != null){
-      nomeController.text = widget.pontoTuristicoAtual!.nome;
-      descricaoController.text = widget.pontoTuristicoAtual!.descricao;
-      diferenciaisController.text = widget.pontoTuristicoAtual!.diferenciais;
-      dataController.text = widget.pontoTuristicoAtual!.dataFormatada;
+    if(widget.pontoTuristico != null){
+      nomeController.text = widget.pontoTuristico!.nome;
+      descricaoController.text = widget.pontoTuristico!.descricao;
+      diferenciaisController.text = widget.pontoTuristico!.diferenciais;
+      dataController.text = widget.pontoTuristico!.dataFormatada;
     }
   }
 
@@ -94,7 +96,7 @@ class ConteudoFormDialogState extends State<ConteudoFormDialog> {
   bool dadosValidos() => formKey.currentState!.validate() == true;
 
   PontoTuristico get novoPontoTuristico => PontoTuristico(
-      id: widget.pontoTuristicoAtual?.id ?? 0,
+      id: widget.pontoTuristico?.id ?? 0,
       nome: nomeController.text,
       descricao: descricaoController.text,
       diferenciais: diferenciaisController.text,
