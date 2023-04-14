@@ -20,11 +20,11 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
   static const ACAO_EXCLUIR = 'excluir';
   static const ACAO_VISUALIZAR = 'visualizar';
 
-  /*final pontosTuristicos = <PontoTuristico>[
+ /* final pontosTuristicos = <PontoTuristico>[
     PontoTuristico(id: 1, nome: 'Igreja', descricao: 'Igreja Matriz', diferenciais: 'Centro', data: DateTime.now())
   ];*/
 
-  final _pontoTuristico = <PontoTuristico>[];
+  final _pontoTuristico = <PontoTuristico>[PontoTuristico(id: 2, nome: 'Igreja', descricao: 'Igreja Matriz', diferenciais: 'Centro', data: DateTime.now())];
   final _dao = PontoTuristicoDao();
   var _carregando = false;
 
@@ -94,7 +94,7 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
         final pontoTuristico = _pontoTuristico[index];
         return PopupMenuButton<String>(
           child: ListTile(
-            title: Text('${pontoTuristico.id} - ${pontoTuristico.descricao}',
+            title: Text('${pontoTuristico.id} - ${pontoTuristico.nome}',
               style: TextStyle(
               ),
             ),
@@ -194,15 +194,19 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
     final key = GlobalKey<ConteudoFormDialogState>();
     showDialog(
         context: context,
-        builder: (BuildContext context){
-          return AlertDialog(
-            title: Text(pontoTuristico == null ? 'Novo ponto turistico' : 'Alterar ponto turistico ${pontoTuristico.id}'),
-            content: ConteudoFormDialog(key: key, pontoTuristico: pontoTuristico,),
-            actions: [
-              TextButton(
-                child: Text('Cancelar'),
-                onPressed: () => Navigator.pop(context),
-              ),
+        builder: (_) => AlertDialog(
+      title: Text(
+        pontoTuristico == null ? 'Novo Ponto Turistico' : 'Alterar Ponto Turistico ${pontoTuristico.id}',
+      ),
+      content: ConteudoFormDialog(
+        key: key,
+        pontoTuristico: pontoTuristico,
+      ),
+      actions: [
+        TextButton(
+          child: Text('Cancelar'),
+          onPressed: () => Navigator.pop(context),
+        ),
               TextButton(
                 child: Text('Salvar'),
                 onPressed: () {
@@ -220,25 +224,9 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
               },
               ),
             ],
-          );
-        });
+          ),
+        );
   }
-
-  /*void _abrirVisualizacao({PontoTuristico? pontoTuristicoAtual, int? index}){
-    final key = GlobalKey<ConteudoFormDialogState>();
-    showDialog(
-        context: context,
-        builder: (BuildContext context){
-          return AlertDialog(
-            title: Text('Visualizar ponto Turistico ${pontoTuristicoAtual?.id}'),
-            content: ConteudoFormDialog(key: key, pontoTuristicoAtual : pontoTuristicoAtual,),
-            actions: [
-              TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('OK')),
-            ],
-          );
-        }
-    );
-  }*/
 
   void _excluir(PontoTuristico pontoTuristico){
     showDialog(

@@ -10,8 +10,6 @@ class ConteudoFormDialog extends StatefulWidget{
 
   ConteudoFormDialog({Key ? key, this.pontoTuristico}) : super(key: key);
 
-  void init() {}
-
   @override
   ConteudoFormDialogState createState() => ConteudoFormDialogState();
 }
@@ -96,7 +94,7 @@ class ConteudoFormDialogState extends State<ConteudoFormDialog> {
   bool dadosValidos() => formKey.currentState!.validate() == true;
 
   PontoTuristico get novoPontoTuristico => PontoTuristico(
-      id: widget.pontoTuristico?.id ?? 0,
+      id: widget.pontoTuristico?.id ?? null,
       nome: nomeController.text,
       descricao: descricaoController.text,
       diferenciais: diferenciaisController.text,

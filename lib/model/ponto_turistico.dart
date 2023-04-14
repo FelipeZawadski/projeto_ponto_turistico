@@ -10,13 +10,13 @@ class PontoTuristico{
   static const DATA = 'data';
   static const NOME_TABLE = 'pontosturisticos';
 
-  int id;
+  int? id;
   String nome;
   String descricao;
   String diferenciais;
   DateTime? data;
 
-  PontoTuristico({required this.id, required this.nome ,required this.descricao, required this.diferenciais, required this.data});
+  PontoTuristico({this.id, required this.nome ,required this.descricao, required this.diferenciais, required this.data});
 
   String get dataFormatada{
     if(data == null){
@@ -38,6 +38,6 @@ class PontoTuristico{
       nome: map[CAMPO_NOME] is String ? map[CAMPO_NOME] : '',
       descricao: map[CAMPO_DESCRICAO] is String ? map[CAMPO_DESCRICAO] : '',
       diferenciais: map[CAMPO_DIFERENCIAIS] is String ? map[CAMPO_DIFERENCIAIS] : '',
-      data: map[DATA] == null ? null : DateFormat("dd/MM/yyyy").parse(map[DATA])
+      data: map[DATA] is String ? DateFormat("dd/MM/yyyy").parse(map[DATA]) : null
   );
 }

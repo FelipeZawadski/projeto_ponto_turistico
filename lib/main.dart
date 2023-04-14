@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_ponto_turistico/pages/filtro_page.dart';
 import 'package:projeto_ponto_turistico/pages/lista_ponto_turistico.dart';
 
 void main() {
@@ -17,6 +18,9 @@ class CadastrarPontoTuristico extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: ListaPontoTuristicoPage(),
+      routes: {
+        FiltroPage.ROUTE_NAME: (BuildContext context) => FiltroPage(),
+      },
     );
   }
 }

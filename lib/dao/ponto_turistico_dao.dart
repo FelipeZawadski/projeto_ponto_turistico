@@ -13,6 +13,7 @@ class PontoTuristicoDao{
     final valores = pontoTuristico.toMap();
     if (pontoTuristico.id == null) {
       pontoTuristico.id = await database.insert(PontoTuristico.NOME_TABLE, valores);
+      
       return true;
     } else {
       final registrosAtualizados = await database.update(
@@ -49,6 +50,7 @@ class PontoTuristicoDao{
     if(usarOrdemDecrescente){
       orderBy += ' DESC';
     }
+
     final database = await dbProvider.database;
     final resultado = await database.query(PontoTuristico.NOME_TABLE,
       columns: [PontoTuristico.CAMPO_ID, PontoTuristico.CAMPO_NOME, PontoTuristico.CAMPO_DESCRICAO, PontoTuristico.CAMPO_DIFERENCIAIS, PontoTuristico.DATA],

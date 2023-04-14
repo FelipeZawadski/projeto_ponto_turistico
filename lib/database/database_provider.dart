@@ -21,7 +21,6 @@ class DatabaseProvider {
       dbPath,
       version: _dbVersion,
       onCreate: _onCreate,
-      //onUpgrade: _onUpgrade,
     );
   }
 
@@ -35,16 +34,6 @@ class DatabaseProvider {
         ${PontoTuristico.CAMPO_DIFERENCIAIS} TEXT);
     ''');
   }
-
-  /*Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    switch(oldVersion){
-      case 1:
-        await db.execute('''
-        ALTER TABLE ${PontoTuristico.NOME_TABLE}
-        ADD ${Tarefa.campoFinalizada} INTEGER NOT NULL DEFAULT 0;
-        ''');
-    }
-  }*/
 
   Future<void> close() async {
     if (_database != null) {
