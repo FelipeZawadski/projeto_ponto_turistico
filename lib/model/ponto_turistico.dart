@@ -9,14 +9,18 @@ class PontoTuristico{
   static const CAMPO_DIFERENCIAIS = 'diferenciais';
   static const DATA = 'data';
   static const NOME_TABLE = 'pontosturisticos';
+  static const LONGITUDE = 'longitude';
+  static const LATITUDE = 'latitude';
 
   int? id;
   String nome;
   String descricao;
   String diferenciais;
   DateTime? data;
+  String longitude;
+  String latitude;
 
-  PontoTuristico({this.id, required this.nome ,required this.descricao, required this.diferenciais, required this.data});
+  PontoTuristico({this.id, required this.nome ,required this.descricao, required this.diferenciais, required this.data, required this.longitude, required this.latitude});
 
   String get dataFormatada{
     if(data == null){
@@ -31,6 +35,8 @@ class PontoTuristico{
     CAMPO_DESCRICAO: descricao,
     CAMPO_DIFERENCIAIS: diferenciais,
     DATA: data == null ? null : DateFormat("dd/MM/yyyy").format(data!),
+    LONGITUDE: longitude,
+    LATITUDE: latitude,
   };
 
   factory PontoTuristico.fromMap(Map<String, dynamic>  map) => PontoTuristico(
@@ -38,6 +44,8 @@ class PontoTuristico{
       nome: map[CAMPO_NOME] is String ? map[CAMPO_NOME] : '',
       descricao: map[CAMPO_DESCRICAO] is String ? map[CAMPO_DESCRICAO] : '',
       diferenciais: map[CAMPO_DIFERENCIAIS] is String ? map[CAMPO_DIFERENCIAIS] : '',
-      data: map[DATA] is String ? DateFormat("dd/MM/yyyy").parse(map[DATA]) : null
+      data: map[DATA] is String ? DateFormat("dd/MM/yyyy").parse(map[DATA]) : null,
+      longitude: map[LONGITUDE] is String ? map[LONGITUDE] : '',
+      latitude: map[LATITUDE] is String ? map[LATITUDE] : '',
   );
 }
