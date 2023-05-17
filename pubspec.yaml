@@ -38,6 +38,7 @@ dependencies:
   intl: ^0.18.0
   shared_preferences: ^2.0.18
   sqflite: ^2.2.6
+  geolocator: ^9.0.2
 
 dev_dependencies:
   flutter_test:
