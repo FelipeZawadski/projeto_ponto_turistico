@@ -5,7 +5,7 @@ import '../model/ponto_turistico.dart';
 
 class DatabaseProvider {
   static const _dbName = 'cadastro_ponto_turistico.db';
-  static const _dbVersion = 1;
+  static const _dbVersion = 2;
 
   DatabaseProvider._init();
   static final DatabaseProvider instance = DatabaseProvider._init();
@@ -21,6 +21,7 @@ class DatabaseProvider {
       dbPath,
       version: _dbVersion,
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
   }
 
@@ -33,6 +34,17 @@ class DatabaseProvider {
         ${PontoTuristico.CAMPO_NOME} TEXT NOT NULL,
         ${PontoTuristico.CAMPO_DIFERENCIAIS} TEXT);
     ''');
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    switch(oldVersion){
+      case 1:
+        await db.execute('''
+        ALTER TABLE ${PontoTuristico.NOME_TABLE}
+        ADD ${PontoTuristico.LONGITUDE} TEXT NOT NULL,
+            ${PontoTuristico.LATITUDE} TEXT NOT NULL,
+        ''');
+    }
   }
 
   Future<void> close() async {
