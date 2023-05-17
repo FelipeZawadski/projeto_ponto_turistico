@@ -49,7 +49,7 @@ class _VisualizarPontoTuristicoPageState extends State<VisualizarPontoTuristicoP
           ),
           Row(
             children: [
-              Campo(descricao:'Diferenciais: '),
+              Campo(descricao:'Diferencial: '),
               Valor(valor: '${widget.pontoTuristico.diferenciais}'),
             ],
           ),

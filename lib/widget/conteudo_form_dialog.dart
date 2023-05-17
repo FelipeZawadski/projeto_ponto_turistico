@@ -73,6 +73,7 @@ class ConteudoFormDialogState extends State<ConteudoFormDialog> {
             ),
             TextFormField(
               controller: dataController,
+              readOnly: true,
               decoration: InputDecoration(labelText: 'Data'),
               validator: (String? valor){
                 if(valor == null || valor.isEmpty){
@@ -84,7 +85,7 @@ class ConteudoFormDialogState extends State<ConteudoFormDialog> {
                   return dataController.text = _dateFormat.format(data);
                 }
               },
-            )
+            ),
           ],
         ),
       ),
