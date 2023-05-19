@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:projeto_ponto_turistico/pages/visualizar_ponto_turistico_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../dao/ponto_turistico_dao.dart';
 import '../model/ponto_turistico.dart';
 import '../widget/conteudo_form_dialog.dart';
 import 'filtro_page.dart';
+import 'package:maps_launcher/maps_launcher.dart';
+
+import 'mapas_page.dart';
 
 
 class ListaPontoTuristicoPage extends StatefulWidget{
@@ -19,15 +23,17 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
   static const ACAO_EDITAR = 'editar';
   static const ACAO_EXCLUIR = 'excluir';
   static const ACAO_VISUALIZAR = 'visualizar';
+  static const ACAO_ABRIR_MAPA = 'abrirMapa';
+  static const ACAO_ABRIR_MAPA_INTERNO = 'abrirMapaInterno';
+  static const ACAO_ROTA = 'rota';
 
- /* final pontosTuristicos = <PontoTuristico>[
-    PontoTuristico(id: 1, nome: 'Igreja', descricao: 'Igreja Matriz', diferenciais: 'Centro', data: DateTime.now())
-  ];*/
-
-  final _pontoTuristico = <PontoTuristico>[PontoTuristico(id: 2, nome: 'Igreja', descricao: 'Igreja Matriz', diferenciais: 'Centro', data: DateTime.now())];
+  final _pontoTuristico = <PontoTuristico> [];
   final _dao = PontoTuristicoDao();
   var _carregando = false;
-
+  final _controller = TextEditingController();
+  Position? _localizacaoAtual;
+  String get _textoLocalizacao => _localizacaoAtual == null ? '' :
+  'Latitude:  ${_localizacaoAtual!.latitude}  |  Logetude:  ${_localizacaoAtual!.longitude}';
 
   @override
   void initState(){
@@ -107,6 +113,13 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => VisualizarPontoTuristicoPage(pontoTuristico: pontoTuristico),
               ));
+            } else if(valorSelecionado == ACAO_ABRIR_MAPA){
+                _controller.text = '${pontoTuristico.longitude}  ${pontoTuristico.latitude}';
+                _abrirMapa();
+            } else if(valorSelecionado == ACAO_ABRIR_MAPA_INTERNO){
+                _abrirMapaInterno(pontoTuristico.longitude, pontoTuristico.latitude);
+            } else if(valorSelecionado == ACAO_ROTA){
+
             }
             else{
               _excluir(pontoTuristico);
@@ -123,7 +136,7 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
     final navigator = Navigator.of(context);
     navigator.pushNamed(FiltroPage.ROUTE_NAME).then((alteracaoValores) {
       if(alteracaoValores == true){
-        ///////
+
       }
     });
   }
@@ -159,6 +172,36 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
                     child: Text('Visualizar')),
               ]
           )
+      ),
+      PopupMenuItem<String>(
+          value: ACAO_ABRIR_MAPA,
+          child: Row(
+              children: [
+                Icon (Icons.map, color: Colors.green),
+                Padding(padding: EdgeInsets.only(left: 10),
+                    child: Text('Abrir Mapa')),
+              ]
+          ),
+      ),
+      PopupMenuItem<String>(
+        value: ACAO_ABRIR_MAPA_INTERNO,
+        child: Row(
+            children: [
+              Icon (Icons.map, color: Colors.black),
+              Padding(padding: EdgeInsets.only(left: 10),
+                  child: Text('Abrir Mapa Interno')),
+            ]
+        ),
+      ),
+      PopupMenuItem<String>(
+        value: ACAO_ROTA,
+        child: Row(
+            children: [
+              Icon (Icons.map, color: Colors.blue),
+              Padding(padding: EdgeInsets.only(left: 10),
+                  child: Text('Abrir Rota')),
+            ]
+        ),
       ),
     ];
   }
@@ -266,4 +309,25 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
         }
     );
   }
+
+  void _abrirMapa(){
+    if(_controller.text.trim().isEmpty){
+      return;
+    }
+    MapsLauncher.launchQuery(_controller.text);
+  }
+
+  void _abrirMapaInterno(double? longitude, double? latitude){
+    if(_localizacaoAtual == null){
+        return;
+    }
+    Navigator.push(context, MaterialPageRoute(
+        builder: (BuildContext context) => MapasPage(
+      latitude: _localizacaoAtual!.latitude,
+      longitude: _localizacaoAtual!.longitude,
+    ),
+    ),
+    );
+  }
+
 }

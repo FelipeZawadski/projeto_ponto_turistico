@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto_ponto_turistico/model/ponto_turistico.dart';
 
@@ -22,6 +23,9 @@ class ConteudoFormDialogState extends State<ConteudoFormDialog> {
   final diferenciaisController = TextEditingController();
   final _dateFormat = DateFormat('dd/MM/yyyy');
   final dataController = TextEditingController();
+  double? longitudeController;
+  double? latitudeController;
+  Position? _localizacao;
 
   @override
   void initState(){
@@ -31,6 +35,11 @@ class ConteudoFormDialogState extends State<ConteudoFormDialog> {
       descricaoController.text = widget.pontoTuristico!.descricao;
       diferenciaisController.text = widget.pontoTuristico!.diferenciais;
       dataController.text = widget.pontoTuristico!.dataFormatada;
+      longitudeController = widget.pontoTuristico!.longitude;
+      latitudeController = widget.pontoTuristico!.latitude;
+      _obterLocalizacaoAtual();
+    } else {
+      _obterLocalizacaoAtual();
     }
   }
 
@@ -100,5 +109,71 @@ class ConteudoFormDialogState extends State<ConteudoFormDialog> {
       descricao: descricaoController.text,
       diferenciais: diferenciaisController.text,
       data: dataController.text.isEmpty ? null : _dateFormat.parse(dataController.text),
+      longitude: _localizacao?.longitude ?? longitudeController,
+      latitude: _localizacao?.latitude ?? latitudeController,
   );
+
+  void _obterLocalizacaoAtual() async{
+    bool servicoHabilitado = await _servicoHabilitado();
+    if(!servicoHabilitado){
+      return;
+    }
+    bool permissoesPermitidas = await _permissoesPermitidas();
+    if(!permissoesPermitidas){
+      return;
+    }
+    _localizacao = await Geolocator.getCurrentPosition();
+    setState(() {
+
+    });
+  }
+
+  Future<bool> _servicoHabilitado() async {
+    bool servicoHabilitado = await Geolocator.isLocationServiceEnabled();
+    if (!servicoHabilitado){
+      await _mostrarDialogMensagem('Para utilizar esse recurso, você deverá habilitar o serviço'
+          ' de localização');
+      Geolocator.openLocationSettings();
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> _permissoesPermitidas() async {
+    LocationPermission permissao = await Geolocator.checkPermission();
+    if(permissao == LocationPermission.denied){
+      permissao = await Geolocator.requestPermission();
+      if(permissao == LocationPermission.denied){
+        _mostrarMensagem('Não será possível utilizar o recurso '
+            'por falta de permissão');
+      }
+    }
+    if(permissao == LocationPermission.deniedForever){
+      await _mostrarDialogMensagem('Para utilizar esse recurso, você deverá acessar '
+          'as configurações do app para permitir a utilização do serviço de localização');
+      Geolocator.openAppSettings();
+      return false;
+    }
+    return true;
+  }
+
+  void _mostrarMensagem(String mensagem){
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(mensagem)));
+  }
+
+  Future<void> _mostrarDialogMensagem(String mensagem) async {
+    await showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('Atenção'),
+        content: Text(mensagem),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK')
+          )
+        ],
+      ),
+    );
+  }
 }

@@ -17,10 +17,18 @@ class PontoTuristico{
   String descricao;
   String diferenciais;
   DateTime? data;
-  String longitude;
-  String latitude;
+  double? longitude;
+  double? latitude;
 
-  PontoTuristico({this.id, required this.nome ,required this.descricao, required this.diferenciais, required this.data, required this.longitude, required this.latitude});
+  PontoTuristico({
+    this.id,
+    required this.nome,
+    required this.descricao,
+    required this.diferenciais,
+    required this.data,
+    this.longitude,
+    this.latitude
+  });
 
   String get dataFormatada{
     if(data == null){
@@ -45,7 +53,7 @@ class PontoTuristico{
       descricao: map[CAMPO_DESCRICAO] is String ? map[CAMPO_DESCRICAO] : '',
       diferenciais: map[CAMPO_DIFERENCIAIS] is String ? map[CAMPO_DIFERENCIAIS] : '',
       data: map[DATA] is String ? DateFormat("dd/MM/yyyy").parse(map[DATA]) : null,
-      longitude: map[LONGITUDE] is String ? map[LONGITUDE] : '',
-      latitude: map[LATITUDE] is String ? map[LATITUDE] : '',
+      longitude: map[LONGITUDE] is double ? map[LONGITUDE] : 0,
+      latitude: map[LATITUDE] is double ? map[LATITUDE] : 0,
   );
 }

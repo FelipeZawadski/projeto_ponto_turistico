@@ -14,6 +14,12 @@ class VisualizarPontoTuristicoPage extends StatefulWidget {
 }
 
 class _VisualizarPontoTuristicoPageState extends State<VisualizarPontoTuristicoPage> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -59,10 +65,23 @@ class _VisualizarPontoTuristicoPageState extends State<VisualizarPontoTuristicoP
               Valor(valor: '${widget.pontoTuristico.data}'),
             ],
           ),
+          Row(
+            children: [
+              Campo(descricao: 'Longitude: '),
+              Valor(valor: '${widget.pontoTuristico.longitude}'),
+            ],
+          ),
+          Row(
+            children: [
+              Campo(descricao: 'Latitude: '),
+              Valor(valor: '${widget.pontoTuristico.latitude}'),
+            ],
+          ),
         ],
       ),
     );
   }
+
 }
 
 class Campo extends StatelessWidget{
