@@ -32,8 +32,6 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
   var _carregando = false;
   final _controller = TextEditingController();
   Position? _localizacaoAtual;
-  String get _textoLocalizacao => _localizacaoAtual == null ? '' :
-  'Latitude:  ${_localizacaoAtual!.latitude}  |  Logetude:  ${_localizacaoAtual!.longitude}';
 
   @override
   void initState(){
