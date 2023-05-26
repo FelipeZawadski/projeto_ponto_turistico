@@ -234,40 +234,49 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
   void _abrirCadastro({PontoTuristico? pontoTuristico}){
     final key = GlobalKey<ConteudoFormDialogState>();
     showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-      title: Text(
-        pontoTuristico == null ? 'Novo Ponto Turistico' : 'Alterar Ponto Turistico ${pontoTuristico.id}',
-      ),
-      content: ConteudoFormDialog(
-        key: key,
-        pontoTuristico: pontoTuristico,
-      ),
-      actions: [
-        TextButton(
-          child: Text('Cancelar'),
-          onPressed: () => Navigator.pop(context),
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(
+          pontoTuristico == null ? 'Novo Ponto Turistico' : 'Alterar Ponto Turistico ${pontoTuristico.id}',
         ),
-              TextButton(
-                child: Text('Salvar'),
-                onPressed: () {
-                  if (key.currentState?.dadosValidos() != true) {
-                    return;
-                  }
-                  Navigator.of(context).pop();
-                  final novoPontoTuristico = key.currentState!.novoPontoTuristico;
-                  _dao.salvar(novoPontoTuristico).then((success) {
-                  if (success) {
-                    _atualizarLista();
-                  }
-                  });
-                _atualizarLista();
-              },
-              ),
-            ],
+        content: ConteudoFormDialog(
+          key: key,
+          pontoTuristico: pontoTuristico,
+        ),
+        actions: [
+          TextButton(
+            child: Text('Cancelar'),
+            onPressed: () => Navigator.pop(context),
           ),
-        );
+          TextButton(
+            child: Text('Salvar'),
+            onPressed: () {
+              /*
+              showDialog(context: context, builder: (_) => AlertDialog(
+                    content: Text('Confirmar Localização do Ponto Turistico'),
+                    actions: [
+                      TextButton(onPressed: _abrirMapa(), child: Text('OK'))
+                    ],
+                  ));
+              */
+              if (key.currentState?.dadosValidos() != true) {
+                return;
+              }
+              Navigator.of(context).pop();
+              final novoPontoTuristico = key.currentState!.novoPontoTuristico;
+              _dao.salvar(novoPontoTuristico).then((success) {
+                if (success) {
+                  _atualizarLista();
+                }
+              });
+              _atualizarLista();
+            },
+          ),
+        ],
+      ),
+    );
   }
+
 
   void _excluir(PontoTuristico pontoTuristico){
     showDialog(
