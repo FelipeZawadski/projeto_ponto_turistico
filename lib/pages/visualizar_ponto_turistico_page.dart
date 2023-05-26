@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_ponto_turistico/model/ponto_turistico.dart';
 
 class VisualizarPontoTuristicoPage extends StatefulWidget {
-  final PontoTuristico pontoTuristico;
+    final PontoTuristico pontoTuristico;
 
   const VisualizarPontoTuristicoPage({Key? key, required this.pontoTuristico}) : super(key: key);
 

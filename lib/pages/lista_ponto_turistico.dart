@@ -36,7 +36,7 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
   @override
   void initState(){
     super.initState();
-    _atualizarLista();
+      _atualizarLista();
   }
 
   @override

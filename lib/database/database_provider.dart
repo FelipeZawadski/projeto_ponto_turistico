@@ -32,9 +32,7 @@ class DatabaseProvider {
         ${PontoTuristico.CAMPO_DESCRICAO} TEXT NOT NULL,
         ${PontoTuristico.DATA} TEXT NOT NULL,
         ${PontoTuristico.CAMPO_NOME} TEXT NOT NULL,
-        ${PontoTuristico.CAMPO_DIFERENCIAIS} TEXT,
-        ${PontoTuristico.LONGITUDE} FLOAT,
-        ${PontoTuristico.LATITUDE} FLOAT);
+        ${PontoTuristico.CAMPO_DIFERENCIAIS} TEXT;
     ''');
   }
 
