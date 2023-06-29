@@ -14,11 +14,13 @@ import 'mapas_page.dart';
 
 class ListaPontoTuristicoPage extends StatefulWidget{
 
+  static const title = 'PontoTuristico';
+
   @override
-  _ListaPontoTuristicoPageState createState() =>_ListaPontoTuristicoPageState();
+  ListaPontoTuristicoPageState createState() => ListaPontoTuristicoPageState();
 }
 
-class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
+class ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
 
   static const ACAO_EDITAR = 'editar';
   static const ACAO_EXCLUIR = 'excluir';
@@ -36,20 +38,20 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
   @override
   void initState(){
     super.initState();
-      _atualizarLista();
+    _atualizarLista();
   }
 
   @override
   Widget build(BuildContext context){
-      return Scaffold(
-        appBar: _criarAppBar(),
-        body: _criarBody(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _abrirCadastro,
-          tooltip: 'Novo Ponto Turistico',
-          child: Icon(Icons.add),
-        ),
-      );
+    return Scaffold(
+      appBar: _criarAppBar(),
+      body: _criarBody(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _abrirCadastro,
+        tooltip: 'Novo Ponto Turistico',
+        child: Icon(Icons.add),
+      ),
+    );
   }
 
   AppBar _criarAppBar(){
@@ -112,10 +114,10 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
                 builder: (_) => VisualizarPontoTuristicoPage(pontoTuristico: pontoTuristico),
               ));
             } else if(valorSelecionado == ACAO_ABRIR_MAPA){
-                _controller.text = '${pontoTuristico.longitude}  ${pontoTuristico.latitude}';
-                _abrirMapa();
+              _controller.text = '${pontoTuristico.longitude}  ${pontoTuristico.latitude}';
+              _abrirMapa();
             } else if(valorSelecionado == ACAO_ABRIR_MAPA_INTERNO){
-                _abrirMapaInterno(pontoTuristico.longitude, pontoTuristico.latitude);
+              _abrirMapaInterno(pontoTuristico.longitude, pontoTuristico.latitude);
             } else if(valorSelecionado == ACAO_ROTA){
 
             }
@@ -172,14 +174,14 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
           )
       ),
       PopupMenuItem<String>(
-          value: ACAO_ABRIR_MAPA,
-          child: Row(
-              children: [
-                Icon (Icons.map, color: Colors.green),
-                Padding(padding: EdgeInsets.only(left: 10),
-                    child: Text('Abrir Mapa')),
-              ]
-          ),
+        value: ACAO_ABRIR_MAPA,
+        child: Row(
+            children: [
+              Icon (Icons.map, color: Colors.green),
+              Padding(padding: EdgeInsets.only(left: 10),
+                  child: Text('Abrir Mapa')),
+            ]
+        ),
       ),
       PopupMenuItem<String>(
         value: ACAO_ABRIR_MAPA_INTERNO,
@@ -205,30 +207,30 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
   }
 
   void _atualizarLista() async {
-      setState(() {
-        _carregando = true;
-      });
+    setState(() {
+      _carregando = true;
+    });
 
-      final prefs = await SharedPreferences.getInstance();
-      final campoOrdenacao = prefs.getString(FiltroPage.CAMPO_ORDENACAO) ?? PontoTuristico.CAMPO_ID;
-      final usarOrdemDecrescente = prefs.getBool(FiltroPage.CAMPO_ORDEM_DECRECENTE) == true;
-      final filtroNome = prefs.getString(FiltroPage.CAMPO_NOME) ?? '';
+    final prefs = await SharedPreferences.getInstance();
+    final campoOrdenacao = prefs.getString(FiltroPage.CAMPO_ORDENACAO) ?? PontoTuristico.CAMPO_ID;
+    final usarOrdemDecrescente = prefs.getBool(FiltroPage.CAMPO_ORDEM_DECRECENTE) == true;
+    final filtroNome = prefs.getString(FiltroPage.CAMPO_NOME) ?? '';
 
-      final pontoTuristico = await _dao.listar(
-        filtro: filtroNome,
-        campoOrdenacao: campoOrdenacao,
-        usarOrdemDecrescente: usarOrdemDecrescente,
-      );
+    final pontoTuristico = await _dao.listar(
+      filtro: filtroNome,
+      campoOrdenacao: campoOrdenacao,
+      usarOrdemDecrescente: usarOrdemDecrescente,
+    );
 
-      setState(() {
-        _pontoTuristico.clear();
-        if (pontoTuristico.isNotEmpty) {
-          _pontoTuristico.addAll(pontoTuristico);
-        }
-      });
-      setState(() {
-        _carregando = false;
-      });
+    setState(() {
+      _pontoTuristico.clear();
+      if (pontoTuristico.isNotEmpty) {
+        _pontoTuristico.addAll(pontoTuristico);
+      }
+    });
+    setState(() {
+      _carregando = false;
+    });
   }
 
   void _abrirCadastro({PontoTuristico? pontoTuristico}){
@@ -287,8 +289,8 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
               children: [
                 Icon(Icons.warning, color: Colors.red,),
                 Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text('ATENÇÃO'),
+                  padding: EdgeInsets.only(left: 10),
+                  child: Text('ATENÇÃO'),
                 ),
               ],
             ),
@@ -326,13 +328,13 @@ class _ListaPontoTuristicoPageState extends State<ListaPontoTuristicoPage>{
 
   void _abrirMapaInterno(double? longitude, double? latitude){
     if(_localizacaoAtual == null){
-        return;
+      return;
     }
     Navigator.push(context, MaterialPageRoute(
-        builder: (BuildContext context) => MapasPage(
-      latitude: _localizacaoAtual!.latitude,
-      longitude: _localizacaoAtual!.longitude,
-    ),
+      builder: (BuildContext context) => MapasPage(
+        latitude: _localizacaoAtual!.latitude,
+        longitude: _localizacaoAtual!.longitude,
+      ),
     ),
     );
   }

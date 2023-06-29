@@ -8,10 +8,14 @@ import '../services/cep_service.dart';
 class ConsultaCepFragment extends StatefulWidget{
   static const title = 'Buscar CEP';
 
+  /*@override
+  _ConsultaCepFragment createState() => _ConsultaCepFragment();*/
+
   @override
-  State<StatefulWidget> createState() => _ConsultaCepFragmentState();
+  State<StatefulWidget> createState() => ConsultaCepFragmentState();
+
 }
-class _ConsultaCepFragmentState extends State<ConsultaCepFragment>{
+class ConsultaCepFragmentState extends State<ConsultaCepFragment>{
   final _service = CepService();
   final _controller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
