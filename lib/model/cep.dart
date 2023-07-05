@@ -18,8 +18,7 @@ class Cep{
   final String? codigoDeArea;
   final String? siafi;
 
-  Cep({this.cep, this.logradouro, this.complemento, this.bairro, this.localidade,
-    this.uf, this.ibge, this.gia, this.codigoDeArea, this.siafi});
+  Cep({this.cep, this.logradouro, this.complemento, this.bairro, this.localidade, this.uf, this.ibge, this.gia, this.codigoDeArea, this.siafi});
 
   factory Cep.fromJson(Map<String, dynamic> json) => _$CepFromJson(json);
   Map<String, dynamic> tojson() => _$CepToJson(this);
