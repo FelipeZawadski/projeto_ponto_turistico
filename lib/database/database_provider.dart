@@ -29,10 +29,12 @@ class DatabaseProvider {
     await db.execute(''' 
       CREATE TABLE ${PontoTuristico.NOME_TABLE} (
         ${PontoTuristico.CAMPO_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
-        ${PontoTuristico.CAMPO_DESCRICAO} TEXT NOT NULL,
-        ${PontoTuristico.DATA} TEXT NOT NULL,
         ${PontoTuristico.CAMPO_NOME} TEXT NOT NULL,
-        ${PontoTuristico.CAMPO_DIFERENCIAIS} TEXT;
+        ${PontoTuristico.CAMPO_DESCRICAO} TEXT NOT NULL,
+        ${PontoTuristico.DATA} TEXT, 
+        ${PontoTuristico.CAMPO_DIFERENCIAIS} REAL,
+        ${PontoTuristico.LONGITUDE} REAL, 
+        ${PontoTuristico.LATITUDE} REAL);
     ''');
   }
 
@@ -41,12 +43,12 @@ class DatabaseProvider {
       case 2:
         await db.execute('''
         ALTER TABLE ${PontoTuristico.NOME_TABLE}
-        ADD ${PontoTuristico.LONGITUDE} FLOAT;
+        ADD ${PontoTuristico.LONGITUDE} REAL;
         ''');
 
         await db.execute('''
         ALTER TABLE ${PontoTuristico.NOME_TABLE}
-        ADD ${PontoTuristico.LATITUDE} FLOAT;
+        ADD ${PontoTuristico.LATITUDE} REAL;
         ''');
     }
   }
